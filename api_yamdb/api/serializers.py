@@ -14,12 +14,16 @@ class DefaultCurrentUser(serializers.ModelSerializer):
 
 
 class ReviewSerializer(DefaultCurrentUser):
+    # title = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = Review
         fields = ('id', 'text', 'author', 'score', 'pub_date',)
 
 
 class CommentSerializer(DefaultCurrentUser):
+    # review = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = Comment
         fields = ('id', 'text', 'author', 'pub_date',)
