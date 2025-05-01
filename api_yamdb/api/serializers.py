@@ -20,6 +20,11 @@ class ReviewSerializer(DefaultCurrentUser):
         model = Review
         fields = ('id', 'text', 'author', 'score', 'pub_date',)
 
+    def validate_score(self, value):
+        if not 1 <= value <= 10:
+            raise serializers.ValidationError('Score must be from 1 to 10')
+        return value
+
 
 class CommentSerializer(DefaultCurrentUser):
     # review = serializers.PrimaryKeyRelatedField(read_only=True)

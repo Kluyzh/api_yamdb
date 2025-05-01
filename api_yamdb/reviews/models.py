@@ -23,6 +23,12 @@ class Review(models.Model):
 
     class Meta:
         ordering = ('-pub_date', 'author',)
+        constraints = (
+            models.UniqueConstraint(
+                fields=('author', 'title',),
+                name='one_review_from_author_on_title'
+            ),
+        )
 
     def __str__(self):
         return self.text
