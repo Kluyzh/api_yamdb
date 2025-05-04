@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.contrib.auth import get_user_model
 from django.db.models import Avg
 from django_filters.rest_framework import DjangoFilterBackend
@@ -24,6 +23,7 @@ from api.serializers import (
     CommentSerializer,
     UserSerializer,
     UserSignupSerializer,
+    TokenSerializer,
 )
 from reviews.models import Category, Genre, Review, Title
 
@@ -115,12 +115,12 @@ class SignupView(APIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-# не уверена что здесь правильно
-# class TokenView(APIView):
-#
-#    def post(self, request):
-#        serializer.is_valid(raise_exception=True)
-#        return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+class TokenView(APIView):
+
+    def post(self, request):
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
 class UserViewSet(viewsets.ModelViewSet):
