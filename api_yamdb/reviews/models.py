@@ -14,6 +14,7 @@ MAX_SCORE = 10  # Максимальная оценка произведения
 MAX_LENGTH_NAME = 256  # Максимальная длина поля name
 MAX_LENGTH_SLUG = 50  # Максимальная длина поля slug
 
+
 def validate(value):
     year = datetime.today().year
     if value > year:
