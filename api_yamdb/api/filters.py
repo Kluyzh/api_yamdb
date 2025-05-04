@@ -1,37 +1,22 @@
-from django.contrib.auth import get_user_model
-from rest_framework import permissions
+from django_filters import rest_framework as filters
 
-User = get_user_model()
-
-
-class IsAuthorOrModerator(permissions.BasePermission):
-
-    def has_permission(self, request, view):
-        return (
-            request.method in permissions.SAFE_METHODS
-            or request.user.is_authenticated
-        )
-
-    def has_object_permission(self, request, view, obj):
-        return (
-            request.method in permissions.SAFE_METHODS
-            or obj.author == request.user
-            or request.user.is_moderator
-            or request.user.is_admin
-            or request.user.is_superuser
-        )
+from reviews.models import Title
 
 
-class IsAdminUser(permissions.BasePermission):
+class TitleFilter(filters.FilterSet):
+    name = filters.CharFilter(
+        field_name='name',
+        lookup_expr='icontains'
+    )
+    category = filters.CharFilter(
+        field_name='category__slug',
+        lookup_expr='icontains'
+    )
+    genre = filters.CharFilter(
+        field_name='genre__slug',
+        lookup_expr='icontains'
+    )
 
-    def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.is_admin
-
-
-class IsReadOnlyOrAdmin(permissions.BasePermission):
-
-    def has_permission(self, request, view):
-        return (
-            (request.user.is_authenticated and request.user.is_admin)
-            or request.method in permissions.SAFE_METHODS
-        )
+    class Meta:
+        model = Title
+        fields = ['name', 'year', 'category', 'genre']
