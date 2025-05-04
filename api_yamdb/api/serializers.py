@@ -153,3 +153,26 @@ class UserSignupSerializer(serializers.Serializer):
             recipient_list=[user.email],
         )
         return user
+
+
+class TokenSerializer(serializers.Serializer):
+
+    username = serializers.CharField(
+        max_length=MAX_LENGTH_USERNAME,
+        required=True,
+        validators=[
+            ASCIIUsernameValidator(),
+            username_not_me
+        ]
+    )
+    confirmation_code = serializers.CharField(required=True)
+
+    def validate(self, data):
+        username = data.get('username')
+        confirmation_code = data.get('confirmation_code')
+        user = get_object_or_404(User, username=username)
+
+        if not default_token_generator.check_token(user, confirmation_code):
+            raise serializers.ValidationError('Неверный confirmation_code')
+
+        return {'token': str(AccessToken.for_user(user))}
