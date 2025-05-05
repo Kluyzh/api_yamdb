@@ -4,6 +4,8 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
 
+from .constants import (MAX_CODE_LENGTH, MAX_EMAIL_LENGTH, MAX_NAME_LENGTH,
+                        MAX_ROLE_LENGTH)
 from .validators import username_is_not_me
 
 
@@ -55,7 +57,7 @@ class User(AbstractUser):
     username = models.CharField(
         'username',
         blank=False,
-        max_length=150,
+        max_length=MAX_NAME_LENGTH,
         unique=True,
         help_text=('Required. 150 characters or fewer. '
                    'Letters, digits and @/./+/-/_ only.'),
@@ -67,31 +69,31 @@ class User(AbstractUser):
     email = models.EmailField(
         'email address',
         blank=False,
-        max_length=254,
+        max_length=MAX_EMAIL_LENGTH,
         unique=True
     )
     first_name = models.CharField(
         'Имя',
-        max_length=150,
+        max_length=MAX_NAME_LENGTH,
         blank=True,
         null=True
     )
     last_name = models.CharField(
         'Фамилия',
-        max_length=150,
+        max_length=MAX_NAME_LENGTH,
         blank=True,
         null=True
     )
     bio = models.TextField('Биография', blank=True, null=True)
     role = models.CharField(
         'Роль',
-        max_length=20,
+        max_length=MAX_ROLE_LENGTH,
         choices=RoleChoice.choices,
         default=RoleChoice.USER
     )
     confirmation_code = models.CharField(
         'Код подтверждения',
-        max_length=30,
+        max_length=MAX_CODE_LENGTH,
         blank=True,
         null=True
     )

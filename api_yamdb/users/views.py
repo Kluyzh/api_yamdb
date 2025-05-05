@@ -25,14 +25,14 @@ User = get_user_model()
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.order_by('id')
     serializer_class = UserSerializer
-    permission_classes = [IsAdminRolePermission]
+    permission_classes = (IsAdminRolePermission,)
     pagination_class = PageNumberPagination
-    filter_backends = [SearchFilter]
+    filter_backends = (SearchFilter,)
     lookup_field = 'username'
-    search_fields = ['username']
+    search_fields = ('username',)
 
     @action(detail=False, methods=['get', 'patch'], url_path='me',
-            url_name='current_user', permission_classes=[IsAuthenticated])
+            url_name='current_user', permission_classes=(IsAuthenticated,))
     def get_me(self, request):
         user = request.user
         if request.method == 'get':
