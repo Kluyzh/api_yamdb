@@ -15,13 +15,13 @@ MAX_LENGTH_NAME = 256  # Максимальная длина поля name
 MAX_LENGTH_SLUG = 50  # Максимальная длина поля slug
 
 
-def validate(value):
+def validate_year_not_future(value):
     year = datetime.today().year
     if value > year:
         raise ValidationError('Введенное значение, превышает текущую дату')
 
 
-class BaseModel(models.Model):
+class NameAndSlugBaseModel(models.Model):
     name = models.CharField(
         max_length=MAX_LENGTH_NAME,
         verbose_name='Название'
@@ -29,6 +29,7 @@ class BaseModel(models.Model):
     slug = models.SlugField(
         unique=True,
         max_length=MAX_LENGTH_SLUG,
+        verbose_name='слаг'
     )
 
     class Meta:
@@ -39,16 +40,18 @@ class BaseModel(models.Model):
         return self.name[:RETURN_TEXT_LEN]
 
 
-class Category(BaseModel):
+class Category(NameAndSlugBaseModel):
 
-    class Meta(BaseModel.Meta):
+    class Meta(NameAndSlugBaseModel.Meta):
         verbose_name = 'категория'
+        verbose_name_plural = 'категории'
 
 
-class Genre(BaseModel):
+class Genre(NameAndSlugBaseModel):
 
-    class Meta(BaseModel.Meta):
+    class Meta(NameAndSlugBaseModel.Meta):
         verbose_name = 'жанр'
+        verbose_name_plural = 'жанры'
 
 
 class Title(models.Model):
@@ -70,12 +73,13 @@ class Title(models.Model):
     )
     year = models.SmallIntegerField(
         verbose_name='Год выпуска',
-        validators=(validate,)
+        validators=(validate_year_not_future,)
     )
 
     class Meta:
         ordering = ('-year', 'name')
         verbose_name = 'произведение'
+        verbose_name_plural = 'произведения'
 
     def __str__(self):
         return self.name[:RETURN_TEXT_LEN]
@@ -96,6 +100,7 @@ class Review(models.Model):
 
     class Meta:
         verbose_name = 'отзыв'
+        verbose_name_plural = 'отзывы'
         ordering = ('-pub_date',)
         constraints = (
             models.UniqueConstraint(
@@ -119,6 +124,7 @@ class Comment(models.Model):
 
     class Meta:
         verbose_name = 'комментарий'
+        verbose_name_plural = 'комментарии'
         ordering = ('-pub_date',)
 
     def __str__(self):
