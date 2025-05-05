@@ -2,6 +2,7 @@ from rest_framework import filters, mixins, viewsets
 
 from users.permissions import IsAdminRolePermission
 
+
 class BaseViewSet(
     mixins.CreateModelMixin, mixins.ListModelMixin,
     mixins.DestroyModelMixin, viewsets.GenericViewSet

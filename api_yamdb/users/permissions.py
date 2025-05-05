@@ -64,7 +64,7 @@ class IsModeratorRolePermission(permissions.BasePermission):
         return request.user.role == RoleChoice.MODERATOR
 
 
-class CategoryGenrePermission(permissions.BasePermission):
+class IsReadOnlyOrAdmin(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return (
@@ -73,14 +73,6 @@ class CategoryGenrePermission(permissions.BasePermission):
                 request.user.is_authenticated
                 and request.user.role == RoleChoice.ADMIN
             )
-        )
-
-class IsReadOnlyOrAdmin(permissions.BasePermission):
-
-    def has_permission(self, request, view):
-        return (
-            (request.user.is_authenticated and request.user.role == RoleChoice.ADMIN)
-            or request.method in permissions.SAFE_METHODS
         )
 
 

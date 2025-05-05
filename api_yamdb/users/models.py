@@ -1,8 +1,8 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
-from django.contrib.auth.validators import UnicodeUsernameValidator
 
 from .validators import username_is_not_me
 

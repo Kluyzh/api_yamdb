@@ -16,6 +16,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from api.serializers import UserSerializer
+
 from .permissions import IsAdminRolePermission
 
 User = get_user_model()

@@ -1,41 +1,28 @@
 from django.contrib.auth import get_user_model
 from django.db.models import Avg
-from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
-from rest_framework import filters, permissions, status, viewsets
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, viewsets
 
 from api.base import BaseViewSet
 from api.filters import TitleFilter
-from users.permissions import IsAdminRolePermission, IsModeratorRolePermission, IsUserAuthRolePermission, CategoryGenrePermission, IsReadOnlyOrAdmin, IsAuthorOrModerator
-# (
-#     IsAdminUser,
-#     IsReadOnlyOrAdmin,
-#     IsAuthorOrModerator,
-# )
-from api.serializers import (
-    TitleSerializerRead,
-    TitleSerializerWrite,
-    CategorySerializer,
-    GenreSerializer,
-    ReviewCommentSerializer,
-    CommentSerializer,
-)
+from api.serializers import (CategorySerializer, CommentSerializer,
+                             GenreSerializer, ReviewCommentSerializer,
+                             TitleSerializerRead, TitleSerializerWrite)
 from reviews.models import Category, Genre, Review, Title
+from users.permissions import IsAuthorOrModerator, IsReadOnlyOrAdmin
 
 User = get_user_model()
 
 
 class CategoryViewSet(BaseViewSet):
-    permission_classes = (CategoryGenrePermission,)
+    permission_classes = (IsReadOnlyOrAdmin,)
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
 
 class GenreViewSet(BaseViewSet):
-    permission_classes = (CategoryGenrePermission,)
+    permission_classes = (IsReadOnlyOrAdmin,)
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
 
@@ -87,7 +74,9 @@ class CommentViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewCommentSerializer
     permission_classes = (IsAuthorOrModerator,)
-    http_method_names = ('get', 'post', 'patch', 'delete', 'head', 'options', 'trace')
+    http_method_names = (
+        'get', 'post', 'patch', 'delete', 'head', 'options', 'trace'
+    )
 
     @property
     def title(self):

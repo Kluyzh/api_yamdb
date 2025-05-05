@@ -2,11 +2,10 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.validators import ASCIIUsernameValidator
 from django.core.mail import send_mail
-
 from rest_framework import serializers
-from users.models import User
 
 from reviews.models import Category, Comment, Genre, Review, Title
+from users.models import User
 
 User = get_user_model()
 
@@ -113,14 +112,6 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ('id', 'author', 'text', 'pub_date')
 
 
-class UserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-
-        model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'bio', 'role')
-
-
 class UserSignupSerializer(serializers.Serializer):
 
     username = serializers.CharField(
@@ -157,7 +148,7 @@ class UserSignupSerializer(serializers.Serializer):
         return data
 
     def create(self, validated_data):
-        user, created = User.objects.get_or_create(
+        user = User.objects.get_or_create(
             username=validated_data['username'],
             email=validated_data['email']
         )
@@ -169,26 +160,3 @@ class UserSignupSerializer(serializers.Serializer):
             recipient_list=[user.email],
         )
         return user
-
-
-# class TokenSerializer(serializers.Serializer):
-
-#     username = serializers.CharField(
-#         max_length=MAX_LENGTH_USERNAME,
-#         required=True,
-#         validators=[
-#             ASCIIUsernameValidator(),
-#             username_not_me
-#         ]
-#     )
-#     confirmation_code = serializers.CharField(required=True)
-
-#     def validate(self, data):
-#         username = data.get('username')
-#         confirmation_code = data.get('confirmation_code')
-#         user = get_object_or_404(User, username=username)
-
-#         if not default_token_generator.check_token(user, confirmation_code):
-#             raise serializers.ValidationError('Неверный confirmation_code')
-
-#         return {'token': str(AccessToken.for_user(user))}
