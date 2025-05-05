@@ -28,7 +28,7 @@ class GenreViewSet(BaseViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all().annotate(
+    queryset = Title.objects.annotate(
         rating=Avg('reviews__score')).order_by(*Title._meta.ordering)
     permission_classes = (IsReadOnlyOrAdmin,)
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]

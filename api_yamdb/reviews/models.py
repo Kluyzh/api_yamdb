@@ -68,7 +68,7 @@ class Title(models.Model):
         related_name='titles',
         verbose_name='Категории'
     )
-    year = models.IntegerField(
+    year = models.SmallIntegerField(
         verbose_name='Год выпуска',
         validators=(validate,)
     )
@@ -88,9 +88,10 @@ class Review(models.Model):
     title = models.ForeignKey(Title, on_delete=models.CASCADE,
                               related_name='reviews',
                               verbose_name='Произведение')
-    score = models.IntegerField('Оценка произведения',
-                                validators=[MinValueValidator(MIN_SCORE),
-                                            MaxValueValidator(MAX_SCORE)])
+    score = models.PositiveSmallIntegerField(
+        'Оценка произведения',
+        validators=(MinValueValidator(MIN_SCORE), MaxValueValidator(MAX_SCORE))
+    )
     pub_date = models.DateTimeField('Дата пуликации', auto_now_add=True)
 
     class Meta:
