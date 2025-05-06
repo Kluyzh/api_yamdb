@@ -112,20 +112,20 @@ class UserViewSet(viewsets.ModelViewSet):
     lookup_field = 'username'
     search_fields = ('username',)
 
-    @action(detail=False, methods=['get', 'patch'], url_path='me',
+    @action(detail=False, url_path='me',
             url_name='current_user', permission_classes=(IsAuthenticated,))
     def get_me(self, request):
-        user = request.user
-        if request.method == 'get':
-            serializer = self.get_serializer(user)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            data = request.data.copy()
-            data.pop('role', None)
-            serializer = self.get_serializer(user, data=data, partial=True)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = self.get_serializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @get_me.mapping.patch
+    def update_current_user(self, request):
+        data = request.data.copy()
+        data.pop('role', None)
+        serializer = self.get_serializer(request.user, data=data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
         if request.method == 'PUT':
