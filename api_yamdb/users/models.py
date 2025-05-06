@@ -76,15 +76,13 @@ class User(AbstractUser):
         'Имя',
         max_length=MAX_NAME_LENGTH,
         blank=True,
-        null=True
     )
     last_name = models.CharField(
         'Фамилия',
         max_length=MAX_NAME_LENGTH,
         blank=True,
-        null=True
     )
-    bio = models.TextField('Биография', blank=True, null=True)
+    bio = models.TextField('Биография', blank=True)
     role = models.CharField(
         'Роль',
         max_length=MAX_ROLE_LENGTH,
