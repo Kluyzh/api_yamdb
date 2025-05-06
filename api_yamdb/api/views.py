@@ -155,22 +155,31 @@ class SignUpUserView(APIView):
         )
 
     def send_confirmation_code(self, user):
-        serializer = UserSerializer(user)
         confirmation_code = default_token_generator.make_token(user)
         try:
-            send_mail(
-                'Код подтверждения:',
-                f'{confirmation_code}',
-                settings.EMAIL_HOST_USER,
-                [user.email],
-                fail_silently=False,
-            )
+            self.send_confirmation_email(user, confirmation_code)
         except SMTPDataError as e:
-            print(f"Ошибка отправки email: {e}")
-        return Response({
-            'username': serializer.data['username'],
-            'email': serializer.data['email']
-        }, status=status.HTTP_200_OK
+            print(f'Ошибка отправки email: {e}')
+            return Response(
+                {'error': 'Ошибка при отправке письма с кодом подтверждения.'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        return Response(
+            {
+                'username': user.username,
+                'email': user.email
+            },
+            status=status.HTTP_200_OK
+        )
+      
+    def send_confirmation_email(self, user, confirmation_code):
+        send_mail(
+            subject='Код подтверждения:',
+            message=f'{confirmation_code}',
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[user.email],
+            fail_silently=False,
         )
 
 
