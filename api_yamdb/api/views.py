@@ -69,11 +69,8 @@ class CommentViewSet(viewsets.ModelViewSet):
     @property
     def review(self):
         return get_object_or_404(
-            Review.objects.select_related('title').filter(
-                pk=self.kwargs.get('review_id'),
-                title=self.kwargs.get('title_id')
-            )
-        )
+            Review, pk=self.kwargs.get('review_id'),
+            title=self.kwargs.get('title_id'))
 
     def get_queryset(self):
         return self.review.comments.all()
