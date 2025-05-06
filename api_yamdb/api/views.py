@@ -172,7 +172,7 @@ class SignUpUserView(APIView):
             },
             status=status.HTTP_200_OK
         )
-      
+
     def send_confirmation_email(self, user, confirmation_code):
         send_mail(
             subject='Код подтверждения:',
