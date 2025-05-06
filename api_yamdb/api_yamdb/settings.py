@@ -116,13 +116,17 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = ((BASE_DIR / 'static/'),)
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.mail.ru'
-EMAIL_PORT = 2525
-EMAIL_HOST_USER = '*****@mail.ru'
-EMAIL_HOST_PASSWORD = '***********'
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
+if not DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.mail.ru'
+    EMAIL_PORT = 2525
+    EMAIL_HOST_USER = '*****@mail.ru'
+    EMAIL_HOST_PASSWORD = '***********'
+    EMAIL_USE_TLS = True
+    EMAIL_USE_SSL = False
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+    EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

@@ -100,6 +100,18 @@ class User(AbstractUser):
 
     objects = UserManager()
 
+    @property
+    def is_admin(self):
+        return self.is_superuser or self.role == RoleChoice.ADMIN.value
+
+    @property
+    def is_moderator(self):
+        return self.is_staff or self.role == RoleChoice.MODERATOR.value
+
+    @property
+    def is_user(self):
+        return self.role == RoleChoice.USER.value
+
     def __str__(self):
         return self.username
 
